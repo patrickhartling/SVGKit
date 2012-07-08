@@ -328,10 +328,17 @@ static NSCache *_sharedDocuments;
     
     [parser setParserExtensions:[SVGDocument generalExtensions]];
     
-    BOOL result = [parser parse:error];
+	NSError *tempError = nil;
+	BOOL result = [parser parse:&tempError];
 	
 	if (!result) 
-		NSLog(@"[%@] SVGKit Parse error: %@", [self class], *error);
+	{
+		if (NULL != error)
+		{
+			*error = tempError;
+		}
+		NSLog(@"[%@] SVGKit Parse error: %@", [self class], tempError);
+	}
 	
 	[parser release];
 	
